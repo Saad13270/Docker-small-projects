@@ -1,0 +1,59 @@
+**Lab 3: Running Docker Containers on AWS Elastic Container Service (ECS)**
+
+Objective:
+The objective of the lab "Running Docker Containers on AWS Elastic Container Service (ECS)" is to learn how to deploy and manage Docker containers using AWS ECS.
+
+Tasks:
+    1. Create a Docker Image
+    2. Create ECS Cluster
+    3. Create ECS Task Definition
+    4. Create an ECS Task
+    5. Launching the ECS Task
+
+Prerequisites:
+Ensure you have an AWS account.
+Install and configure the AWS Command Line Interface (CLI).
+Install and configure the Docker CLI.
+Create an ECS cluster if one doesn't already exist.
+
+Create a Docker Image:
+Write a Dockerfile to define your container image.
+Build the Docker image using the docker build command.
+Bash syntax:
+		Docker build -t <name> .
+
+Optionally, push the Docker image to a container registry like Amazon Elastic Container Registry (ECR) or Docker Hub.
+
+Configure ECS Cluster:
+Ensure that your ECS cluster has the necessary resources (instances) to run your tasks.
+If not, configure the cluster to auto-scale or manually add instances.
+
+Create an ECS Task Definition:
+Define the task definition that describes your container and its resources.
+Specify container image details, CPU, memory, environment variables, and more in the task definition.
+
+
+
+Create an ECS Task:
+Create an ECS service based on the task definition.
+Define the desired number of tasks to run.
+Configure the service with load balancing if needed (e.g., Application Load Balancer or Network Load Balancer).
+Launch ECS Tasks:
+Use the AWS CLI or AWS Management Console to start the ECS tasks.
+Verify that your containers are running successfully.
+
+
+
+
+The purpose of the lab "Running Docker Containers on AWS Elastic Container Service (ECS)" is to provide hands-on experience and practical knowledge of deploying and managing containerized applications in a cloud environment using AWS ECS. This lab enables participants to:
+
+    1. Gain familiarity with containerization using Docker.
+    2. Learn how to leverage AWS ECS for orchestrating container deployments at scale.
+    3. Understand key ECS concepts, including task definitions and services.
+    4. Explore best practices for deploying, scaling, and monitoring containers.
+    5. Enhance skills in AWS cloud computing, infrastructure management, and DevOps practices.
+    6. Prepare for real-world scenarios involving containerized applications and cloud-based deployment.
+
+
+Ultimately, this lab empowers individuals and teams to efficiently deploy and manage containerized applications in a flexible and scalable manner within the AWS ecosystem, supporting modern software development and deployment workflows.
+
