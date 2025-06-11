@@ -1,0 +1,68 @@
+Basics of Docker networking:
+Docker uses networking to allow containers to communicate, both with each other and with the outside world. By default, Docker creates a virtual bridge, docker0, on the host machine and attaches containers to this bridge. Each container gets its own internal IP address and can communicate with other containers on the same host.
+
+Differences between networking modes and their use-cases:
+
+1.Bridge Mode:
+Default networking mode when you run a container.
+Containers get an internal IP address and communicate via the docker0 bridge.
+Suitable for most general use-cases where containers need network access but don't need to be directly accessible from the host network.
+
+2.Host Mode:
+Bypasses Docker's internal networking and the container uses the host's network stack directly.
+Removes network isolation between the container and the host.
+Useful when the container needs to be a part of the host's network environment or for high-performance requirements.
+
+3.None Mode:
+Disables all networking for the container.
+The container gets its own network namespace, but without any configuration.
+Suitable for containers that don't need network access or for security-conscious applications.
+
+
+
+
+
+Step-by-Step Guide:
+1. Set up multiple Docker containers on an EC2 instance:
+Step 1.1: If you haven't already set up Docker on your EC2 instance, follow the Docker installation steps from the previous labs.
+
+Step 1.2: Deploy a couple of simple nginx containers:
+
+bash
+Copy code
+docker run -d --name nginx-container1 nginx
+docker run -d --name nginx-container2 nginx
+2. Implement and test different networking modes:
+Step 2.1: Bridge Mode (default):
+
+When you run the nginx containers in the step above, they are already in bridge mode. To see details:
+
+bash
+Copy code
+docker inspect nginx-container1 | grep IPAddress
+This will give you the internal IP address of the container. You can curl this IP from the host or other containers on the same host.
+
+Step 2.2: Host Mode:
+
+Deploy a container in host mode:
+
+bash
+Copy code
+docker run -d --name nginx-host-mode --network host nginx
+Since it's using the host's network stack directly, you can access the nginx service directly using the EC2 instance's IP address:
+
+bash
+Copy code
+curl localhost
+Step 2.3: None Mode:
+
+Deploy a container with no networking:
+
+bash
+Copy code
+docker run -d --name nginx-none-mode --network none nginx
+If you inspect this container, you'll see it has no IP address and no network interface other than the loopback:
+
+bash
+Copy code
+docker inspect nginx-none-mode
