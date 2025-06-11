@@ -1,0 +1,44 @@
+Lab 1: Setting up an AWS EC2 Instance for Docker
+
+Objective:
+Understand how to provision and configure an AWS EC2 instance suitable for Docker deployments.
+
+Tasks:
+- Launch an EC2 instance.
+- SSH into the instance.
+- Install Docker on the EC2 instance.
+
+Here are detailed steps with code examples for each task:
+
+Task 1: Launch an EC2 Instance
+First, you'll need to launch an EC2 instance. In this example, we'll use the AWS Command LineInterface (AWS CLI) to create an EC2 instance.
+
+Task 2: SSH into the Instance
+Once your EC2 instance is running, you need to SSH into it. Replace your-ec2-public-ip with the public IP address of your EC2 instance and your-key-pair.pem with the path to your private key file. You should now have a shell session on your EC2 instance.
+
+Task 3: Install Docker
+Now that you're connected to your EC2 instance, you can install Docker. Run the following commands to
+install Docker:
+
+Bash:
+# Update the package database		
+sudo apt update -y			
+                                                              	
+# Install Docker				
+sudo apt install docker.io -y		
+					
+# Start and enable the Docker service	
+sudo systemctl start docker		
+sudo systemctl enable docker
+		
+Docker should now be installed and running on your EC2 instance.
+
+Documentation and Additional Information
+EC2 (Elastic Compute Cloud): EC2 is a web service offered by AWS that provides resizable compute capacity in the cloud. It allows you to run virtual servers (instances) with various configurations, making it suitable for a wide range of use cases. EC2 instances are commonly used for hosting web applications, running batch jobs, and more.
+
+SSH Access: SSH (Secure Shell) is a network protocol that provides secure remote access to a server or computer over a potentially unsecured network. It's essential for remote management, as it allows you to securely log in to your EC2 instance and execute commands.
+
+Docker: Docker is a containerization platform that simplifies the deployment and scaling of applications by packaging them into containers. Containers are lightweight, portable, and isolated environments that can run applications and their dependencies. Docker is crucial in DevOps for creating consistent and reproducible environments for development, testing, and production.
+
+
+Completing this lab will give you a deep understanding of provisioning an EC2 instance on AWS, securing SSH access, and setting up Docker for containerized applications.
