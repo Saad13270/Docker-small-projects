@@ -1,0 +1,73 @@
+Lab 2: Building a basic Docker image and pushing it to AWS Elastic Container Registry (ECR)
+
+Objective:
+Building a basic Docker image and pushing it to AWS Elastic Container Registry (ECR) involves several Tasks.
+
+Tasks:
+    1. Install Docker
+    2. Install AWS CLI
+    3. Create Dockerfile
+    4. Build the Docker image
+    5. Authenticate AWS ECR (elastic container registry)
+    6. Create an ECR repository
+    7. Tag the Docker image
+    8. Push the Docker image to ECR
+    9. Verify the image in ECR
+
+**Task 1: Install Docker**
+If you haven't already, install Docker on your local machine. You can download it from the official Docker website.
+
+**Task 2: Create a Dockerfile**
+Create a file called `Dockerfile` in your project directory. This file defines how your Docker image should be built:
+
+Creating Dockerfile
+
+# Use an official Nginx base image
+FROM nginx:latest
+
+# Copy your code and any other static files to the container
+COPY . /usr/share/nginx/html
+
+# Expose port 8080 to listen for incoming HTTP requests
+EXPOSE 8080
+
+# Start Nginx when the container starts
+CMD ["nginx", "-g", "daemon off;"]
+
+**Task 3: Build the Docker Image**
+Open a terminal in your project directory and run the following command to build your Docker image:
+
+```Syntax bash
+docker build -t <name> .
+```
+
+**Task 4: Authenticate to AWS ECR**
+Before you can push the image to AWS ECR, you need to authenticate your Docker client with your AWS account. You can use the AWS Command Line Interface (CLI) for this:
+
+```bash
+aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin <your-account-id>.dkr.ecr.<your-region>.amazonaws.com
+```
+
+Make sure to replace `<your-region>` with your AWS region and `<your-account-id>` with your AWS account ID.
+
+**Task 5: Create an ECR Repository**
+If you haven't already, create a repository in AWS ECR to store your Docker image.
+
+**Task 6: Tag the Docker Image**
+Tag your Docker image with the ECR repository URI:
+
+```bash
+docker tag my <app>:latest <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/<my-node-app>:latest
+```
+
+**Task 7: Push the Docker Image to ECR**
+Push the Docker image to AWS ECR:
+
+```bash
+docker push <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/<app>:latest
+```
+
+**Task 8: Verify the Image in ECR**
+You can check AWS ECR to verify that your image has been successfully pushed.
+
+Now, you've successfully built a basic Docker image and pushed it to AWS Elastic Container Registry (ECR). You can use this image to deploy containers in AWS services like Amazon ECS or AWS Fargate.
