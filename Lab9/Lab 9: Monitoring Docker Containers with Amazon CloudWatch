@@ -1,0 +1,71 @@
+Lab 9: Monitoring Docker Containers with Amazon CloudWatch
+Objective:
+Implement monitoring and logging for Docker containers using AWS CloudWatch.
+
+Tasks:
+    1. Deploy a Docker container.
+    2. Integrate the container with CloudWatch for logging and metrics.
+
+Documentation:
+Importance of monitoring in DevOps:
+Monitoring is a crucial aspect of the DevOps lifecycle. It provides visibility into the health, performance, and reliability of applications, infrastructure, and the deployment pipeline. By continuously monitoring applications and infrastructure, teams can detect issues early, often before they impact users, and resolve them more quickly. This proactive approach reduces downtime, improves user satisfaction, and accelerates the feedback loop, which is central to the DevOps philosophy.
+
+Using CloudWatch with Docker containers:
+Amazon CloudWatch is a monitoring and observability service from AWS. It provides data and actionable insights to monitor applications, respond to system-wide performance changes, optimize resource utilization, and get a unified view of operational health.
+
+When integrated with Docker containers, CloudWatch can collect and track metrics, collect and monitor log files, and set alarms. This integration allows for centralized logging and monitoring of Docker containers running on AWS, giving you a clear view of how your containers are performing and helping to detect and diagnose issues.
+
+Step-by-Step Guide:
+1. Deploy a Docker container:
+Step 1.1: If you haven't already set up Docker on your EC2 instance, follow the Docker installation steps from the previous labs.
+
+Step 1.2: Deploy a simple nginx container:
+docker run -d --name nginx-container -p 80:80 nginx
+
+2. Integrate the container with CloudWatch for logging and metrics:
+Step 2.1: Install and configure the CloudWatch agent on the EC2 instance:
+
+First, download and install the CloudWatch agent:
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+
+Install the downloaded package:
+sudo dpkg -i amazon-cloudwatch-agent.deb
+
+Step 2.2: Create a CloudWatch agent configuration file:
+{
+    "logs": {
+        "logs_collected": {
+            "files": {
+                "collect_list": [
+                    {
+                        "file_path": "/var/lib/docker/containers/*/*.log",
+                        "log_group_name": "docker-logs",
+                        "log_stream_name": "{instance_id}",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ"
+                    }
+                ]
+            }
+        }
+    }
+}
+
+Save this configuration to a file, say cloudwatch-config.json.
+This configuration tells the CloudWatch agent to collect logs from Docker containers and send them to a log group named docker-logs.
+
+Step 2.3: Start the CloudWatch agent:
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:cloudwatch-config.json -s
+
+The above command fetches the configuration from the cloudwatch-config.json file and starts the agent.
+
+Step 2.4: To verify that the CloudWatch agent is running:
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
+Step 2.5: Head over to the AWS Management Console, navigate to CloudWatch, and then to the Logs section. You should see a new log group named docker-logs. Inside this log group, you can view the logs from your Docker containers.
+
+Conclusion:
+You've successfully deployed a Docker container on AWS and integrated it with Amazon CloudWatch for logging. This setup enables centralized logging and monitoring, which is crucial for detecting, diagnosing, and resolving issues in a timely manner.
+
+
+Troubleshooting Tips:
+    1. Agent Issues: If the CloudWatch agent isn't starting or isn't sending logs, check its logs at ‘/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log’ for clues.
+    2. Permission Issues: Ensure that the EC2 instance has an IAM role with permissions to send logs to CloudWatch.
+    3. Docker Logs: If you're not seeing Docker logs in CloudWatch, ensure that the path in the configuration (/var/lib/docker/containers/*/*.log) matches where Docker is storing container logs on your instance.
