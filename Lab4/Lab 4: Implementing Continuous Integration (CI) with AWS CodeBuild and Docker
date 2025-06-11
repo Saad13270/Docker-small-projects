@@ -1,0 +1,89 @@
+Lab 4: Implementing Continuous Integration (CI) with AWS CodeBuild and Docker
+
+Objective:
+The objective of the "Implementing Continuous Integration with AWS CodeBuild and Docker" lab is to establish a streamlined and automated process for building, testing, and validating software applications whenever changes are made to the source code. By integrating AWS CodeBuild and Docker.
+=====================================================================
+Prerequisites:
+Before you begin, make sure you have the following in place:
+
+    1. An AWS account.
+    2. A source code repository (e.g., GitHub, AWS CodeCommit).
+    3. A Dockerized application.
+    4. AWS CLI installed and configured with necessary permissions.
+
+Step 1: Set Up Your AWS Environment
+	Create an AWS CodeBuild project in the AWS Management Console.
+    	Specify your source code repository and branch.
+    	Choose the build environment (e.g., Ubuntu, Amazon Linux).
+    	Configure environment variables if needed (e.g., AWS access keys, Docker credentials).
+
+Step 2: Create a Build Specification File
+	Create a buildspec.yml file in your source code repository.
+    	Define build phases, such as install, build, and post_build.
+    	Specify commands to build and test your Dockerized application.
+    	Optionally, you can define artifacts to be generated during the build process.
+
+
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr <login-command>
+      - REPOSITORY_URI=
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"nodeapp","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json 
+artifacts:
+    files: imagedefinitions.json
+
+
+
+Step 3: Configure Your Source Code Repository
+Set up webhooks or triggers in your source code repository (e.g., GitHub webhook) to notify AWS CodeBuild when code changes are pushed.
+	Provide the webhook URL or trigger details in your source code repository settings.
+
+Step 4: Build and Test Your Application
+Whenever changes are pushed to your source code repository, AWS CodeBuild will automatically trigger a build using the buildspec.yml file.
+AWS CodeBuild will create a Docker build environment based on the specified image (if required) and execute the build commands.
+	Your application will be built and tested within the Docker environment.
+
+Step 5: Monitor Build Progress and Results
+Monitor the build progress and logs in the AWS CodeBuild console or through AWS CloudWatch logs.If the build fails, review the logs to identify and address issues.
+
+Step 6: Artifact Generation (Optional)
+If your build generates artifacts, they will be stored in the specified S3 bucket or other configured storage.You can access and deploy these artifacts as needed.
+
+Step 7: Notifications (Optional)
+Configure notifications to alert your team when builds succeed or fail.Use AWS Simple Notification Service (SNS) or other messaging services to send notifications.
+
+Step 8: Integration with Deployment (Optional)
+If you have a deployment pipeline, integrate the CI process with your continuous deployment (CD) system.Deploy your application to the desired environment when builds pass and meet deployment criteria.
+
+Step 9: Testing and Validation (Optional)
+Implement automated tests in your CI/CD pipeline to ensure that the built artifacts are functioning correctly.
+	Run tests automatically after successful builds.
+
+Step 10: Continuous Improvement
+	Continuously monitor and optimize your CI/CD pipeline for efficiency and reliability.
+	Collect metrics and logs to identify bottlenecks or areas for improvement.
+
+
+By following these steps, you can implement continuous integration with AWS CodeBuild and Docker, helping you streamline your development process and ensure the quality of your software applications. Remember that this is a high-level overview, and the specific steps and configurations may vary depending on your project's requirements and technologies used.
+
