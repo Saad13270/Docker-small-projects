@@ -1,0 +1,44 @@
+Lab-5: **Continuous Deployment with AWS CodePipeline, ECS, and Docker**
+
+Objective: The objective of this lab is to automate the deployment of Dockerized applications on Amazon ECS using AWS CodePipeline, improving agility and reliability in software delivery.
+By achieving seamless continuous deployment, this lab streamlines the release process, ensuring consistent and efficient container deployments across environments.
+
+Set up AWS Resources:
+    • Create an ECS cluster if you haven't already.
+    • Create an ECS task definition that specifies the container image and other configuration settings.Set up an Amazon ECR repository to store your Docker images.
+
+Create an IAM Role:
+    • Create an IAM role that allows CodePipeline to perform actions on ECS and ECR. This role should have permissions to create/update ECS tasks, services, and access ECR repositories.
+
+Create a Docker Image:
+    • Develop your application and create a Dockerfile to build the Docker image for your application.
+    • Build and push the Docker image to your ECR repository.
+
+Set up AWS CodePipeline:
+    • Open the AWS Management Console and navigate to AWS CodePipeline.
+    • Create a new CodePipeline.
+
+Configure Source Stage:
+    • Connect your source code repository (e.g., GitHub, AWS CodeCommit) as the source stage.
+    • Define the branch or trigger that initiates the pipeline when changes are detected.
+
+Configure Build Stage:
+    • Add a build stage to your pipeline using AWS CodeBuild or a similar service.
+    • Create a buildspec.yaml file to define how your Docker image should be built.
+    • Configure the build stage to build the Docker image and push it to your ECR repository.
+
+Configure Deployment Stage:
+    • Add a deployment stage to your pipeline.
+    • Use AWS CloudFormation or the AWS ECS CLI to create or update your ECS service and task definition with the new Docker image.
+
+Configure ECS Deployment Action:
+    • Add an ECS Deploy action within the deployment stage.
+    • Specify the ECS cluster, service name, task definition, and ECR repository details.
+    • Use the IAM role created in step 2 for permissions.
+
+Configure Deployment Trigger:
+    • Set up an automatic trigger for the deployment stage so that it's executed after the build stage successfully completes.
+
+
+
+In this lab, we aim to make deploying software easier and more reliable. We'll use Amazon ECS, which is like a home for your applications, and AWS CodePipeline, which is like a conveyor belt for your code. Together, they automate the process of taking your software, putting it in a container (like a digital box), and then smoothly moving it to different places like a staging area or even to your users. This automation helps you release updates quickly, with less room for mistakes, so your applications run smoothly and you can keep your users happy.
